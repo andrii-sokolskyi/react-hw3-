@@ -1,8 +1,7 @@
 
 import React, { Component } from 'react';
-import { Route, Switch, BrowserRouter, Redirect, Link, Router, HashRouter } from 'react-router-dom';
+import { Route, Switch, Redirect, Link, HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import axios from 'axios';
 
 import HousesPage from './components/houses-page';
 import CharacterPage from './components/character-page';
@@ -12,29 +11,7 @@ import './app.scss'
 
 class App extends Component {
 
-    cancel: any;
     store = createStore;
-
-    constructor(props: object) {
-        super(props);
-        this.state = {
-            users: [],
-            done: false
-        }
-        this.cancel = null;
-    }
-
-    componentDidMount() {
-        axios.get('https://www.anapioficeandfire.com/api/houses')
-             .then(response => response.data)
-             .then(data => {
-                 console.log(data);
-             })
-    }
-
-    componentWillUnMount() {
-        this.cancel()
-    }
 
     render () {
         return (
@@ -51,6 +28,7 @@ class App extends Component {
                                 <Route exact path="/houses" component={HousesPage} />
                                 <Redirect exact from="/" to="/houses" />
                                 <Route exact path="/character/:id" component={CharacterPage} />
+                                <Redirect from="*" to="/houses" />
                             </Switch>
                         </div>
                     </HashRouter>

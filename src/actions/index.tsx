@@ -1,4 +1,4 @@
-import { GET_CHARACTER, GET_HOUSE, LOAD_START, LOAD_END } from '../constants';
+import { GET_CHARACTER, GET_HOUSE, LOAD_START, LOAD_END, GO_TO_NEXT_PAGE, GO_TO_PREV_PAGE } from '../constants';
 import axios from 'axios';
 import { Character } from '../models/character';
 
@@ -20,11 +20,28 @@ export const getCharacter = (id: number | string) => (dispatch: any) => {
         .catch( error => console.log(error))
 }
 
-export const getHouse = () => (dispatch: any) => {
+export const getHouse = (pageNumber: number) => async (dispatch: any) => {
     dispatch({
-        type: GET_HOUSE,
-        payload: 'result_of_simple_action'
+        type: LOAD_START
     })
+
+    try {
+        const res = await fetch(`https://www.anapioficeandfire.com/api/houses?page=${pageNumber}`);
+        const response = await res.json();
+    
+        dispatch({
+          payload: response,
+          type: GET_HOUSE
+        });
+        dispatch({
+            type: LOAD_END
+        });
+    } catch (error) {
+        dispatch({
+          type: LOAD_END
+        });
+    }
+
 }
 
 export const loadStart = () => (dispatch: any) => {
@@ -36,5 +53,17 @@ export const loadStart = () => (dispatch: any) => {
 export const loadEnd = () => (dispatch: any) => {
     dispatch({
         type: LOAD_END
+    })
+}
+
+export const goToNextPage = () => ( dispatch:  any) => {
+    dispatch({
+        type: GO_TO_NEXT_PAGE
+    })
+}
+
+export const goToPrevPage = () => ( dispatch:  any) => {
+    dispatch({
+        type: GO_TO_PREV_PAGE
     })
 }
